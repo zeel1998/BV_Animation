@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<style>
+#container {
+  width: 800px;
+  height: 50px;
+  position: relative;
+  background: #fefbe7;
+  border: 2px solid;
+}
+#container1 {
+  width: 800px;
+  height: 50px;
+  position: relative;
+  background: #fefbe7;
+  border: 2px solid red;
+}
+.animate {
+  width: 0px;
+  height: 50px;
+  position: absolute;
+  background-color: #C4DDFF;
+}
+.quarter-ellipse-up {
+  float: left;
+  background: #fefbe7;
+  width: 120px;
+  height: 60px;
+  border-radius: 0 0 100% 0;
+}
+.quarter-ellipse-inner-up {
+  background:  #FEE2C5;
+  width: 96px;
+  height: 48px;
+  border-radius: 0 0 100% 0;
+}
+.quarter-ellipse-down {
+  float: left;
+  background: #fefbe7;
+  width: 120px;
+  height: 60px;
+  border-radius: 0 0 100% 0;
+  margin-top: 48px;
+  transform: rotate(180deg);
+}
+.quarter-ellipse-inner-down {
+  background: #FEE2C5;
+  width: 96px;
+  height: 48px;
+  border-radius: 0 0 100% 0;
+}
+.link{
+  background-color: #FEE2C5;
+}
+.link-container {
+  display: flex;
+}
+.buttonclass{
+
+  width: 100px;
+  height: 70px;
+  font-size: 32px;
+}
+.checkbox {
+  width: 40px;
+  height: 40px;
+  margin-right: 50px;
+  font-size: 35px;
+}
+.master {
+  transform: rotateY(180deg) rotate(90deg) translateX(50%);
+}
+p{
+
+  font-size: 35px;
+}
+</style>
+<body bgcolor="#FEE2C5">
+
+<p align="center">
+  <label for="pipe1">Pipe1</label>
+  <input type="checkbox" class="checkbox" name="pipe1" id="pipe1">
+  <label for="pipe2">Pipe2</label>
+  <input type="checkbox" class="checkbox" name="pipe2" id="pipe2">
+  <label for="pipe3">Pipe3</label>
+  <input type="checkbox" class="checkbox" name="pipe3" id="pipe3">
+  <label for="pipe4">Pipe4</label>
+  <input type="checkbox" class="checkbox" name="pipe4" id="pipe4">
+  <button onclick="myMove()" class="buttonclass">Flow</button>
+  <button onclick="clearAll()" class="buttonclass">Clear</button>
+</p> 
+<div class="master">
+<div id ="container">
+  <div class ="animate"></div>
+</div>
+<div class="link-container" style="transform: translate(224px, 0px) rotateX(180deg)">
+  <div class="link">
+    <div class="quarter-ellipse-down" id="first-down">
+      <div class="quarter-ellipse-inner-down"></div>
+    </div>
+    <div class="quarter-ellipse-up" id="first-up">
+        <div class="quarter-ellipse-inner-up"></div>
+    </div>
+  </div>
+</div>
+<div id ="container1">
+  <div class ="animate"></div>
+</div>
+<div class="link-container" style="transform: translate(192px, 0px)">
+<div class="link">
+  <div class="quarter-ellipse-down" id="second-down">
+    <div class="quarter-ellipse-inner-down"></div>
+  </div>
+  <div class="quarter-ellipse-up" id="second-up">
+    <div class="quarter-ellipse-inner-up"></div>
+  </div>
+</div>
+</div>
+<div id ="container">
+  <div class ="animate"></div>
+</div>
+<div id ="container" style="transform: translate(0px, 100px);">
+  <div class ="animate"></div>
+</div>
+</div>
+<script>
+function clearAll() {
+  const elems = document.getElementsByClassName("animate");
+  for (let elem of elems) {
+    elem.style.width = "0";
+  }
+  const downLinks = document.getElementsByClassName("quarter-ellipse-down");
+  for (let downlink of downLinks) {
+    downlink.style.backgroundImage = "";
+  }
+  const upLinks = document.getElementsByClassName("quarter-ellipse-up");
+  for (let uplink of upLinks) {
+    uplink.style.backgroundImage = "";
+  }
+}
+function myMove() {
+  const elems = document.getElementsByClassName("animate");
+  const checkboxes = document.getElementsByClassName("checkbox");
+  for (let i = 0; i < elems.length; i++) {
+    elems[i].d = lateStart(checkboxes, elems, i);
+    setTimeout(function () {
+      elems[i].t = 0;
+      elems[i].style.transform = "translate(" + elems[i].d["offset"] + "px,0px)";
+      clearInterval(elems[i].s);
+      if (elems[i].d["start"]) {
+        elems[i].s = setInterval(frame, 1); 
+      } else {
+        elems[i].s = null;
+      }
+      function frame() {
+        if (elems[i].t + elems[i].d["offset"] == elems[i].d["end"]) {
+          clearInterval(elems[i].s);
+        } else {
+          elems[i].t++; 
+          elems[i].style.width = elems[i].t + "px"; 
+        }
+      }
+      function earlyExit(boxes, elements, index) {
+        const targetIndex = 1;
+        const independentIndex = 3;
+        if (index != targetIndex && index != independentIndex) {
+          if (boxes[targetIndex].checked && boxes[index].checked) {
+            if (i == 0 && elements[i].t >= 432) {
+              return true;
+            }
+            if (i == 2 && elements[i].t >= 464) {
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+    }, elems[i].d["delay"]);
+    function lateStart(boxes, elements, index) {
+      const targetIndex = 1;
+      const independentIndex = 3;
+      var retObj = {};
+      if (index == targetIndex) {
+        if (boxes[targetIndex].checked || boxes[0].checked || boxes[2].checked) {
+          retObj["start"] = true;
+        } else {
+          retObj["start"] = false;
+        }
+      } else {
+        retObj["start"] = boxes[index].checked;
+      }
+      if (index == targetIndex) {
+        if (!boxes[0].checked && !boxes[1].checked && !boxes[2].checked) {
+          retObj["delay"] = 0;
+          retObj["offset"] = 0;
+          retObj["end"] = 800;
+          return retObj;
+        } else if (!boxes[0].checked && !boxes[1].checked && boxes[2].checked) {
+          retObj["delay"] = 600;
+          retObj["offset"] = 408;
+          retObj["end"] = 800;
+          return retObj;
+        } else if (!boxes[0].checked && boxes[1].checked && !boxes[2].checked) {
+          retObj["delay"] = 0;
+          retObj["offset"] = 0;
+          retObj["end"] = 800;
+          return retObj;
+        } else if (!boxes[0].checked && boxes[1].checked && boxes[2].checked) {
+          retObj["delay"] = 0;
+          retObj["offset"] = 0;
+          retObj["end"] = 432;
+          return retObj;
+        } else if (boxes[0].checked && !boxes[1].checked && !boxes[2].checked) {
+          retObj["delay"] = 650;
+          retObj["offset"] = 440;
+          retObj["end"] = 800;
+          return retObj;
+        } else if (boxes[0].checked && !boxes[1].checked && boxes[2].checked) {
+          retObj["delay"] = 600;
+          retObj["offset"] = 408;
+          retObj["end"] = 464;
+          return retObj;
+        } else if (boxes[0].checked && boxes[1].checked && !boxes[2].checked) {
+          retObj["delay"] = 0;
+          retObj["offset"] = 0;
+          retObj["end"] = 464;
+          return retObj;
+        } else {
+          retObj["delay"] = 0;
+          retObj["offset"] = 0;
+          retObj["end"] = 432;
+          return retObj;
+        }
+      }
+      retObj["delay"] = 0;
+      retObj["offset"] = 0;
+      retObj["end"] = 800;
+      return retObj;
+    }
+  }
+  const downLinks = document.getElementsByClassName("quarter-ellipse-down");
+  for (let downlink of downLinks) {
+    setTimeout(function () {
+      if (checkForDownLinkFlow(downlink, checkboxes)) {
+        downlink.s = setInterval(updateLinkOne, 5);
+      } else {
+        downlink.s = null;
+      }
+      downlink.t = -100;
+    }, 0);
+    function checkForDownLinkFlow(downlink, checkboxes) {
+        if (downlink.id.includes("first") && checkboxes[0].checked) {
+            return true;
+        }
+        if (downlink.id.includes("second") && checkboxes[2].checked) {
+            return true;
+        }
+        return false;
+    }
+    function updateLinkOne() {
+      if (downlink.t == 100) {
+        clearInterval(downlink.s);
+      } else {
+        downlink.t++;
+        downlink.style.backgroundImage = "linear-gradient(270deg, #C4DDFF " + downlink.t +"%, transparent)";
+      }
+    }
+  }
+  const upLinks = document.getElementsByClassName("quarter-ellipse-up");
+  let upLintPos = -100;
+  for (let link of upLinks) {
+    clearInterval(link.s);
+    if (checkForLinkFlow(link, checkboxes)) {
+      link.s = setInterval(updateLinkTwo, 5);
+    } else {
+      link.s = null;
+    }
+    function checkForLinkFlow(downlink, checkboxes) {
+        if (downlink.id.includes("first") && checkboxes[0].checked) {
+            return true;
+        }
+        if (downlink.id.includes("second") && checkboxes[2].checked) {
+            return true;
+        }
+        return false;
+    }
+    function updateLinkTwo() {
+      if (upLintPos == 100) {
+        clearInterval(link.s);
+      } else {
+        upLintPos++;
+        link.style.backgroundImage = "linear-gradient(90deg, #C4DDFF " + upLintPos +"%, transparent)";
+      }
+    }
+  }
+}
+</script>
+
+</body>
