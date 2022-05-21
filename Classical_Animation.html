@@ -21,6 +21,13 @@
   position: absolute;
   background-color: #C4DDFF;
 }
+#animate2 {	
+  width: 0px;	
+  height: 50px;	
+  position: absolute;	
+  background-color: #C4DDFF;	
+  transform: translate(440px, 0px);	
+}
 .quarter-ellipse-up {
   float: left;
   background: #fefbe7;
@@ -105,6 +112,7 @@ p{
 </div>
 <div id ="container1">
   <div class ="animate"></div>
+  <div id="animate2"></div>
 </div>
 <div class="link-container" style="transform: translate(192px, 0px)">
 <div class="link">
@@ -137,10 +145,12 @@ function clearAll() {
   for (let uplink of upLinks) {
     uplink.style.backgroundImage = "";
   }
+  document.getElementById("animate2").style.width = "0px";
 }
 function myMove() {
   const elems = document.getElementsByClassName("animate");
   const checkboxes = document.getElementsByClassName("checkbox");
+  extraBarAnimate();
   for (let i = 0; i < elems.length; i++) {
     elems[i].d = lateStart(checkboxes, elems, i);
     setTimeout(function () {
@@ -293,6 +303,26 @@ function myMove() {
       }
     }
   }
+}
+function extraBarAnimate() {
+  setTimeout(function () {
+    var value = 0;
+    const extraBar = document.getElementById("animate2");
+    const checkboxes = document.getElementsByClassName("checkbox");
+    var animation = null;
+    if (checkboxes[0].checked && checkboxes[1].checked && checkboxes[2].checked) {
+      animation = setInterval(function() {
+        if (value < 360) {
+          value++;
+          extraBar.style.width = value + "px";
+        } else {
+          clearInterval(animation);
+        }
+      }, 1);
+    } else {
+      animation = null;
+    }
+  }, 2000);
 }
 </script>
 
