@@ -67,26 +67,41 @@
   width: 100px;
   height: 70px;
   font-size: 32px;
+  position: relative;left: 200px;top: 120px;
+  
+}
+
+.buttonclass1{
+  width: 100px;
+  height: 70px;
+  font-size: 32px;
+  position: relative;left: 93px;top: 220px;
+
 }
 .checkbox {
   width: 40px;
   height: 40px;
-  margin-right: 50px;
-  font-size: 35px;
+  margin-right: 23px;
+  font-size: 32px;
+  position: relative;left: 128px;top: 150px;
 }
 .master {
   transform: rotateY(180deg) rotate(90deg) translateX(50%);
 }
+label{
+  position: relative;left: 192px;top: 90px;
+}
 p{
 
   font-size: 35px;
+  
 }
 </style>
 <body bgcolor="#FEE2C5">
 
 <p align="center">
   <label for="pipe1">Pipe1</label>
-  <input type="checkbox" class="checkbox" name="pipe1" id="pipe1">
+  <input type="checkbox"  class="checkbox" name="pipe1" id="pipe1"> 
   <label for="pipe2">Pipe2</label>
   <input type="checkbox" class="checkbox" name="pipe2" id="pipe2">
   <label for="pipe3">Pipe3</label>
@@ -94,7 +109,7 @@ p{
   <label for="pipe4">Pipe4</label>
   <input type="checkbox" class="checkbox" name="pipe4" id="pipe4">
   <button onclick="myMove()" class="buttonclass">Flow</button>
-  <button onclick="clearAll()" class="buttonclass">Clear</button>
+  <button onclick="clearAll()" class="buttonclass1">Clear</button>
 </p> 
 <div class="master">
 <div id ="container">
